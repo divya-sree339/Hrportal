@@ -3,6 +3,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.models import User
 from .models import Employee, Department
+from .forms import DepartmentForm
 
 
 # Create your views here.
@@ -18,7 +19,7 @@ def home_page(request):
 
 def registration(request):
     if request.method == "POST":
-        print(request.POST,request.FILES)
+        print(request.POST, request.FILES)
         dept = Department.objects.get(dept_name=request.POST['dept_name'])
         username = request.POST['user_name']
         user = User.objects.create_user(
@@ -81,3 +82,13 @@ def department(request):
         )
         return HttpResponse("Success")
     return render(request, "department.html")
+
+
+def department_form(request):
+    if request.method == "POST":
+        form = DepartmentForm(request.POST)
+        if form.is_valid():
+            return HttpResponse("Successfully Added")
+
+    form = DepartmentForm()
+    return render(request, "departmentform.html", {'depform': form})
