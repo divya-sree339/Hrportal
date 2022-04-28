@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.models import User
-from .models import Employee
+from .models import Employee, Department
 
 
 # Create your views here.
@@ -18,7 +18,8 @@ def home_page(request):
 
 def registration(request):
     if request.method == "POST":
-        print(request.POST)
+        print(request.POST,request.FILES)
+        dept = Department.objects.get(dept_name=request.POST['dept_name'])
         username = request.POST['user_name']
         user = User.objects.create_user(
             first_name=request.POST['firstname'],
@@ -28,15 +29,17 @@ def registration(request):
             password=request.POST['password'],
         )
         Employee.objects.create(
-            name=request.POST['firstname']+" "+request.POST['lastname'],
+            name=request.POST['firstname'] + " " + request.POST['lastname'],
             user=user,
             mobile=request.POST['mobile'],
             address=request.POST['address'],
             doj=request.POST['doj'],
+            dept=dept,
             designation=request.POST['designation'],
             image=request.FILES['image'],
         )
-    return render(request, "registration.html")
+    dept = Department.objects.all()
+    return render(request, "registration.html", {"dept": dept})
 
 
 def userlogin(request):
@@ -59,10 +62,22 @@ def userlogout(request):
 
 
 def employee_list(request):
-    emp_list=Employee.objects.all()
-    return render(request, "employee_list.html",{"emp_list":emp_list})
+    emp_list = Employee.objects.all()
+    return render(request, "employee_list.html", {"emp_list": emp_list})
 
 
-def employee_details(request,empid):
-    details=Employee.objects.get(id=empid)
-    return render(request, "employee_details.html",{"emp_details":details})
+def employee_details(request, empid):
+    details = Employee.objects.get(id=empid)
+    return render(request, "employee_details.html", {"emp_details": details})
+
+
+def department(request):
+    if request.method == "POST":
+        print(request.POST)
+        Department.objects.create(
+            dept_name=request.POST['dept_name'],
+            dept_desc=request.POST['dept_description']
+
+        )
+        return HttpResponse("Success")
+    return render(request, "department.html")

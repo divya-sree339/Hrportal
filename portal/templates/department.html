@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Department</title>
+</head>
+<body>
+      <form method="post">
+        {%csrf_token%}
+        DEPARTMENT NAME: <input type="text" name="dept_name"/><br>
+        DEPARTMENT DESCRIPTION: <input type="text" name="dept_description"/><br>
+        <input type="submit" value="REGISTER"/>
+      </form>
+</body>
+</html>

@@ -9,4 +9,5 @@ urlpatterns = [
     path('logout/', views.userlogout),
     path('emp_list/',views.employee_list),
     path('<int:empid>/',views.employee_details),
+    path('department/', views.department)
 ]
